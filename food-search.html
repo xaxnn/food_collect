@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>美食搜索结果</title>
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box;font-family:微软雅黑;}
+        body{background:#f8f5f0;padding:40px 20px;text-align:center;}
+        .box{max-width:600px;margin:0 auto;background:white;padding:40px;border-radius:12px;box-shadow:0 3px 10px #0000001a;}
+        h1{color:#d64541;margin-bottom:20px;}
+        p{font-size:18px;color:#333;line-height:1.8;}
+        a{display:inline-block;margin-top:20px;padding:10px 20px;background:#d64541;color:white;text-decoration:none;border-radius:8px;}
+    </style>
+</head>
+<body>
+<div class="box">
+    <h1>已找到美食</h1>
+    <p id="msg"></p>
+    <a href="index.html">返回首页</a>
+</div>
+<script>
+    const params = new URLSearchParams(location.search);
+    const food = decodeURIComponent(params.get('food')||'');
+    document.getElementById('msg').innerText = `“${food}”已收录，可前往对应省份查看详情`;
+</script>
+</body>
+</html>

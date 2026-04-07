@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>舌尖上的中国 - 美食论坛</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: "微软雅黑", sans-serif;
+        }
+
+        body {
+            background-color: #f8f5f0;
+        }
+
+        header {
+            background-color: #d64541;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+
+        .header-right {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-info {
+            color: white;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 8px 15px;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid white;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: rgba(255,255,255,0.3);
+        }
+
+        .back-btn {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            text-decoration: none;
+            padding: 8px 15px;
+            border: 1px solid white;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .back-btn:hover {
+            background-color: rgba(255,255,255,0.2);
+        }
+
+        .forum-container {
+            max-width: 1000px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .post-box {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .post-box h3 {
+            color: #d64541;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .input-group textarea {
+            width: 100%;
+            height: 150px;
+            padding: 12px;
+            border: 2px solid #eee;
+            border-radius: 5px;
+            font-size: 16px;
+            outline: none;
+            resize: vertical;
+        }
+
+        .input-group input:focus,
+        .input-group textarea:focus {
+            border-color: #d64541;
+        }
+
+        .post-btn {
+            background-color: #d64541;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .post-btn:hover {
+            background-color: #b93834;
+        }
+
+        .posts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .post-item {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+
+        .post-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .post-author {
+            font-weight: bold;
+            color: #d64541;
+        }
+
+        .post-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .post-title {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .post-content {
+            color: #666;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .no-posts {
+            text-align: center;
+            color: #999;
+            padding: 50px 0;
+            font-size: 16px;
+        }
+
+        .login-tip {
+            text-align: center;
+            padding: 50px 0;
+            color: #666;
+        }
+
+        .login-tip a {
+            color: #d64541;
+            text-decoration: none;
+        }
+
+        .login-tip a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header-right {
+                flex-direction: column;
+                position: static;
+                transform: none;
+                margin-top: 10px;
+                gap: 5px;
+            }
+            
+            .back-btn {
+                position: static;
+                transform: none;
+                display: inline-block;
+                margin-bottom: 10px;
+            }
+
+            header {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <a href="index.html" class="back-btn">返回首页</a>
+        <h1>美食论坛 - 分享你的美食体验</h1>
+        <div class="header-right">
+            <div class="user-info" id="userInfo">未登录</div>
+            <a href="login.html" class="btn" id="loginBtn">登录</a>
+            <a href="javascript:void(0)" class="btn" id="logoutBtn" style="display: none;">退出登录</a>
+        </div>
+    </header>
+
+    <div class="forum-container">
+        <!-- 发帖区域（仅登录后显示） -->
+        <div class="post-box" id="postBox" style="display: none;">
+            <h3>发布新帖子</h3>
+            <div class="input-group">
+                <input type="text" id="postTitle" placeholder="请输入帖子标题（如：我心中最好吃的川菜）">
+            </div>
+            <div class="input-group">
+                <textarea id="postContent" placeholder="请输入帖子内容（分享你的美食故事、推荐、评价等）"></textarea>
+            </div>
+            <button class="post-btn" id="publishBtn">发布帖子</button>
+        </div>
+
+        <!-- 未登录提示 -->
+        <div class="login-tip" id="loginTip">
+            <p>请先<a href="login.html">登录</a>后发布和查看帖子</p>
+        </div>
+
+        <!-- 帖子列表 -->
+        <div class="posts-list" id="postsList"></div>
+    </div>
+
+    <script>
+        // 获取DOM元素
+        const userInfo = document.getElementById('userInfo');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const postBox = document.getElementById('postBox');
+        const loginTip = document.getElementById('loginTip');
+        const postTitle = document.getElementById('postTitle');
+        const postContent = document.getElementById('postContent');
+        const publishBtn = document.getElementById('publishBtn');
+        const postsList = document.getElementById('postsList');
+
+        // 当前登录用户
+        let currentUser = null;
+
+        // 初始化页面
+        function initPage() {
+            // 获取当前登录用户
+            const userStr = localStorage.getItem('currentUser');
+            if (userStr) {
+                currentUser = JSON.parse(userStr);
+                // 更新用户信息
+                userInfo.textContent = `欢迎，${currentUser.username}`;
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'inline-block';
+                postBox.style.display = 'block';
+                loginTip.style.display = 'none';
+                // 加载帖子列表
+                loadPosts();
+            } else {
+                // 未登录状态
+                userInfo.textContent = '未登录';
+                loginBtn.style.display = 'inline-block';
+                logoutBtn.style.display = 'none';
+                postBox.style.display = 'none';
+                loginTip.style.display = 'block';
+            }
+        }
+
+        // 加载帖子列表
+        function loadPosts() {
+            const posts = JSON.parse(localStorage.getItem('foodPosts') || '[]');
+            // 按发布时间倒序排序
+            posts.sort((a, b) => b.postTime - a.postTime);
+
+            if (posts.length === 0) {
+                postsList.innerHTML = '<div class="no-posts">暂无帖子，快来发布第一个帖子吧！</div>';
+                return;
+            }
+
+            // 渲染帖子列表
+            postsList.innerHTML = '';
+            posts.forEach(post => {
+                const postItem = document.createElement('div');
+                postItem.className = 'post-item';
+                
+                // 格式化时间
+                const postTime = new Date(post.postTime);
+                const timeStr = `${postTime.getFullYear()}-${(postTime.getMonth()+1).toString().padStart(2, '0')}-${postTime.getDate().toString().padStart(2, '0')} ${postTime.getHours().toString().padStart(2, '0')}:${postTime.getMinutes().toString().padStart(2, '0')}`;
+
+                postItem.innerHTML = `
+                    <div class="post-header">
+                        <span class="post-author">${post.author}</span>
+                        <span class="post-time">${timeStr}</span>
+                    </div>
+                    <h3 class="post-title">${post.title}</h3>
+                    <div class="post-content">${post.content}</div>
+                `;
+                postsList.appendChild(postItem);
+            });
+        }
+
+        // 发布帖子
+        publishBtn.addEventListener('click', function() {
+            const title = postTitle.value.trim();
+            const content = postContent.value.trim();
+
+            if (!title || !content) {
+                alert('标题和内容不能为空！');
+                return;
+            }
+
+            if (title.length > 50) {
+                alert('标题长度不能超过50字！');
+                return;
+            }
+
+            if (content.length > 500) {
+                alert('内容长度不能超过500字！');
+                return;
+            }
+
+            // 创建新帖子
+            const newPost = {
+                author: currentUser.username,
+                title: title,
+                content: content,
+                postTime: new Date().getTime()
+            };
+
+            // 保存到本地存储
+            const posts = JSON.parse(localStorage.getItem('foodPosts') || '[]');
+            posts.push(newPost);
+            localStorage.setItem('foodPosts', JSON.stringify(posts));
+
+            // 清空输入框
+            postTitle.value = '';
+            postContent.value = '';
+
+            // 重新加载帖子列表
+            loadPosts();
+            alert('帖子发布成功！');
+        });
+
+        // 退出登录
+        logoutBtn.addEventListener('click', function() {
+            if (confirm('确定要退出登录吗？')) {
+                localStorage.removeItem('currentUser');
+                window.location.reload();
+            }
+        });
+
+        // 初始化
+        initPage();
+
+        // 回车发布
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' && (document.activeElement === postTitle || document.activeElement === postContent)) {
+                if (e.ctrlKey) { // 按住ctrl+enter发布
+                    publishBtn.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>
